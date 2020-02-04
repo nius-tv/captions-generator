@@ -2,7 +2,8 @@ import config
 import datetime
 
 
-def convert(captions):
+def convert(captions, duration):
+	captions = format_captions(captions, duration)
 	lines = ['WEBVTT', '']
 	captions = format_captions(captions)
 
@@ -17,16 +18,19 @@ def convert(captions):
 	return '\n'.join(lines)
 
 
-def format_captions(captions):
+def format_captions(captions, duration):
 	formatted = captions.copy()
 
 	for i, caption in enumerate(formatted):
 		# Start time
 		caption['start'] = format_time(caption['start'])
 		# End time
+		end = caption['end']
 		if i + 1 == len(formatted):
-			caption['end'] += config.END_DURATION_OFFSET
-		caption['end'] = format_time(caption['end'])
+			end += config.END_DURATION_OFFSET
+		if end > duration:
+			end = duration
+		caption['end'] = format_time(end)
 		# The following condition allow us to use the "start" of current
 		# caption as "end" of prev one, preventing his prevents "time gaps".
 		if i > 0:
