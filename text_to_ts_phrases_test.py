@@ -873,6 +873,100 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
+	def test_timestap_phrases_with_space_end(self):
+		""" Should timestamp phrases that end with an extra spacing """
+		fa_words = [
+			{
+				'end': 0.5,
+				'start': 0,
+				'word': 'hi'
+			},
+			{
+				'end': 1.0,
+				'start': 0.5,
+				'word': 'there'
+			},
+			{
+				'end': 1.5,
+				'start': 1.0,
+				'word': 'this'
+			},
+			{
+				'end': 2.0,
+				'start': 1.5,
+				'word': 'is'
+			},
+			{
+				'end': 2.5,
+				'start': 2.0,
+				'word': 'a'
+			},
+			{
+				'end': 3.0,
+				'start': 2.5,
+				'word': 'test'
+			}
+		]
+		text = 'Hi there,  this is a test.'
+
+		assert self.text_to_phrases.convert(text, fa_words) == [
+			{
+				'text': 'Hi there,',
+				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
+			},
+			{
+				'text': 'this is a test.',
+				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
+			}
+		]
+
+	def test_timestap_phrases_with_space_start(self):
+		""" Should timestamp phrases that start with an extra spacing """
+		fa_words = [
+			{
+				'end': 0.5,
+				'start': 0,
+				'word': 'hi'
+			},
+			{
+				'end': 1.0,
+				'start': 0.5,
+				'word': 'there'
+			},
+			{
+				'end': 1.5,
+				'start': 1.0,
+				'word': 'this'
+			},
+			{
+				'end': 2.0,
+				'start': 1.5,
+				'word': 'is'
+			},
+			{
+				'end': 2.5,
+				'start': 2.0,
+				'word': 'a'
+			},
+			{
+				'end': 3.0,
+				'start': 2.5,
+				'word': 'test'
+			}
+		]
+		text = ' Hi there, this is a test.'
+
+		assert self.text_to_phrases.convert(text, fa_words) == [
+			{
+				'text': 'Hi there,',
+				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
+			},
+			{
+				'text': 'this is a test.',
+				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
+			}
+		]	
+
 	def test_tokens_with_periods(self):
 		""" Should split tokens with periods """
 		fa_words = [

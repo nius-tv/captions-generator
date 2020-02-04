@@ -154,6 +154,8 @@ class TextToTimestampPhrases(object):
 
 		for sent in doc.sents:
 			for token in sent:
+				if token.text.strip() == '':
+					continue
 				token = {
 					'idx': token.idx,
 					'text': token.text.strip()
