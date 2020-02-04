@@ -55,7 +55,7 @@ def justify_tokens(tokens):
 				phrases.append(t_window)
 
 				if text_len > config.MIN_CAPTION_LETTERS \
-					and (len(phrases) == 1 or len(phrases) == len(offsets.keys())):
+					and (len(phrases) == 1 or len(phrases) <= len(offsets.keys())):
 					completed = True
 				break
 
