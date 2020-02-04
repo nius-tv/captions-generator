@@ -36,6 +36,7 @@ class TextToTimestampPhrases(object):
 					attempts += 1
 
 				if config.MAX_SKIP_TOKENS == attempts:
+					i += 1 # Skip current
 					a -= config.MAX_SKIP_TOKENS
 					attempts = 0
 					print('--> skip')
