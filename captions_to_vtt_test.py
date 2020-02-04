@@ -11,7 +11,7 @@ class TestCaptionsToVTT(unittest.TestCase):
 	def test(self):
 		""" Should convert captions to WebVTT """
 		captions = [
-			{'end': 1.0, 'start': 0, 'text': 'Hi there,'},
+			{'end': 1.0, 'start': 0.0, 'text': 'Hi there,'},
 			{'end': 3.0, 'start': 1.0, 'text': 'this is a test.'}
 		]
 		vtt = ('WEBVTT\n'
