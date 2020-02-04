@@ -2,18 +2,48 @@ import config
 import datetime
 
 
+def build_vtt_caption(caption_a, caption_b=None):
+	lines = [
+		caption_a['text']
+	]
+
+	if caption_b is None:
+		tmp_caption = caption_a
+	else:
+		tmp_caption = caption_b
+		lines.append(caption_b['text'])
+
+	header = '{} --> {} {}'.format(caption_a['start'],
+								   tmp_caption['end'],
+								   config.CAPTIONS_STYLE)
+	lines.insert(0, header)
+	lines.append('')
+
+	return lines
+
+
 def convert(captions, duration):
 	captions = format_captions(captions, duration)
+	count = 0
 	lines = ['WEBVTT', '']
-	captions = format_captions(captions)
+	prev_caption = None
 
 	for caption in captions:
-		header = '{} --> {} {}'.format(caption['start'],
-									   caption['end'],
-									   config.CAPTIONS_STYLE)
-		lines.append(header)
-		lines.append(caption['text'])
-		lines.append('')
+		if caption['text'][-1] in config.NEW_LINE_TOKENS:
+			count = 1
+
+		if count == 0:
+			prev_caption = caption
+			count = 1
+			continue
+
+		count = 0
+		if prev_caption is None:
+			vtt_caption = build_vtt_caption(caption)
+		else:
+			vtt_caption = build_vtt_caption(prev_caption, caption)
+			prev_caption = None
+		lines.extend(vtt_caption)
 
 	return '\n'.join(lines)
 

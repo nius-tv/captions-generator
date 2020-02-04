@@ -144,6 +144,7 @@ class TextToTimestampPhrases(object):
 
 	def _get_phrases(self, text):
 		text = text.replace('-', ' ') # split words such as in-law, dry-cleaning
+		text = text.replace('+', ' ') # split words such as Wieden+Kennedy
 
 		for k, v in config.PUNCT_TO_DICTIONARY.items():
 			text = text.replace(k, v)

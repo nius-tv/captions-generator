@@ -577,6 +577,39 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
+	def test_plus_sign(self):
+		""" Should timestamp words with "plus signs" """
+		fa_words = [
+			{
+				'end': 0.5,
+				'start': 0,
+				'word': 'Wieden'
+			},
+			{
+				'end': 1.0,
+				'start': 0.5,
+				'word': 'Kennedy'
+			},
+			{
+				'end': 1.5,
+				'start': 1.0,
+				'word': 'tall'
+			},
+			{
+				'end': 2.0,
+				'start': 1.5,
+				'word': 'car'
+			}
+		]
+		text = 'Wieden+Kennedy tall car.'
+
+		assert self.text_to_phrases.convert(text, fa_words) == [
+			{
+				'text': 'Wieden+Kennedy tall car.',
+				'timestamps': [(0.0, 0.5), (0.5, 1.0), (1.0, 1.5), (1.5, 2.0)]
+			}
+		]
+
 	def test_replace_comma_quote(self):
 		""" Should replace phrases ending with comma and quote """
 		fa_words = [
