@@ -121,9 +121,6 @@ class TextToTimestampPhrases(object):
 			else:
 				return left[1] + config.AVG_DURATION_PER_WORD
 
-		elif left[0] > 1 and right == None:
-			return left[1] + (config.AVG_DURATION_PER_WORD * left[0])
-
 		elif left[0] == 1 and right[0] == 1:
 			if side == 'start':
 				if prev_break:
@@ -142,11 +139,7 @@ class TextToTimestampPhrases(object):
 			else:
 				return left[1] + config.AVG_DURATION_PER_WORD
 
-		elif left[0] > 1 and right[0] == 1:
-			if side == 'start':
-				return right[1] - config.AVG_DURATION_PER_WORD
-			else:
-				return right[1]
+		raise Exception('No condition met')
 
 	def _get_phrases(self, text):
 		text = text.replace('-', ' ') # split words such as in-law, dry-cleaning
