@@ -16,10 +16,8 @@ class TestCaptionsToVTT(unittest.TestCase):
 		]
 		vtt = ('WEBVTT\n'
 				'\n'
-				'0:00:00.000 --> 0:00:01.000 align:center line:-9 position:50% size:80%\n'
+				'0:00:00.000 --> 0:00:08.000 align:center line:-9 position:50% size:80%\n'
 				'Hi there,\n'
-				'\n'
-				'0:00:01.000 --> 0:00:08.000 align:center line:-9 position:50% size:80%\n'
 				'this is a test.\n')
 
 		assert convert(captions) == vtt
