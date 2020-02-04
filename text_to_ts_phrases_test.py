@@ -78,11 +78,11 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 		]
 		text = 'Hi there, this is a test.'
 
-		with self.assertRaises(Exception):
+		with self.assertRaises(AssertionError):
 			self.text_to_phrases.convert(text, fa_words)
 
-	def test_not_found_in_audio_end(self):
-		""" Should timestamp not-found-in-audio ending the captions """
+	def test_no_time_words_end(self):
+		""" Should timestamp words-with-no-time ending the captions """
 		fa_words = [
 			{
 				'end': 0.5,
@@ -126,8 +126,8 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
-	def test_not_found_in_audio_start(self):
-		""" Should timestamp not-found-in-audio starting the captions """
+	def test_no_time_words_start(self):
+		""" Should timestamp words-with-no-time starting the captions """
 		fa_words = [
 			{
 				'word': 'hi'
@@ -171,8 +171,8 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
-	def test_phrase_distanced_not_found_in_audio_end(self):
-		""" Should timestamp not-found-in-audio with distance between phrases (ending) """
+	def test_phrase_distanced_no_time_words_end(self):
+		""" Should timestamp words-with-no-time with distance between phrases (ending) """
 		fa_words = [
 			{
 				'end': 0.5,
@@ -216,8 +216,8 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
-	def test_phrase_distanced_not_found_in_audio_start(self):
-		""" Should timestamp not-found-in-audio with distance between phrases (starting) """
+	def test_phrase_distanced_no_time_words_start(self):
+		""" Should timestamp words-with-no-time with distance between phrases (starting) """
 		fa_words = [
 			{
 				'end': 0.5,
@@ -261,8 +261,8 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
-	def test_phrase_not_found_in_audio_end(self):
-		""" Should timestamp not-found-in-audio ending a phrase """
+	def test_phrase_no_time_words_end(self):
+		""" Should timestamp words-with-no-time ending a phrase """
 		fa_words = [
 			{
 				'end': 0.5,
@@ -306,8 +306,8 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
-	def test_phrase_not_found_in_audio_middle(self):
-		""" Should timestamp not-found-in-audio in middle of phrase """
+	def test_phrase_no_time_words_middle(self):
+		""" Should timestamp words-with-no-time in middle of phrase """
 		fa_words = [
 			{
 				'end': 0.5,
@@ -351,8 +351,8 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
-	def test_phrase_not_found_in_audio_start(self):
-		""" Should timestamp not-found-in-audio starting a phrase """
+	def test_phrase_no_time_words_start(self):
+		""" Should timestamp words-with-no-time starting a phrase """
 		fa_words = [
 			{
 				'end': 0.5,
@@ -396,8 +396,8 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
-	def test_phrase_several_not_found_in_audio_end_start(self):
-		""" Should timestamp not-found-in-audio ending and starting a phrase """
+	def test_phrase_several_no_time_words_end_start(self):
+		""" Should timestamp several words-with-no-time ending and starting a phrase """
 		fa_words = [
 			{
 				'end': 0.5,
@@ -439,8 +439,8 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
-	def test_phrase_several_not_found_in_audio_middle(self):
-		""" Should timestamp not-found-in-audio at middle of a phrase """
+	def test_phrase_several_no_time_words_middle(self):
+		""" Should timestamp several words-with-no-time at middle of a phrase """
 		fa_words = [
 			{
 				'end': 0.5,
@@ -482,8 +482,8 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
-	def test_phrase_several_not_found_in_audio_middle_end(self):
-		""" Should timestamp not-found-in-audio at middle and end of a phrase """
+	def test_phrase_several_no_time_words_middle_end(self):
+		""" Should timestamp several words-with-no-time at middle and end of a phrase """
 		fa_words = [
 			{
 				'end': 0.5,
@@ -534,8 +534,8 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
-	def test_phrase_several_not_found_in_audio_start_middle(self):
-		""" Should timestamp not-found-in-audio at start and middle of a phrase """
+	def test_phrase_several_no_time_words_start_middle(self):
+		""" Should timestamp several words-with-no-time at start and middle of a phrase """
 		fa_words = [
 			{
 				'end': 0.5,
@@ -671,8 +671,8 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
-	def test_several_not_found_in_audio_end(self):
-		""" Should timestamp several not-found-in-audio ending the captions """
+	def test_several_no_time_words_end(self):
+		""" Should timestamp several words-with-no-time ending the captions """
 		fa_words = [
 			{
 				'end': 0.5,
@@ -714,8 +714,8 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
-	def test_several_not_found_in_audio_start(self):
-		""" Should timestamp several not-found-in-audio starting the captions """
+	def test_several_no_time_words_start(self):
+		""" Should timestamp several words-with-no-time starting the captions """
 		fa_words = [
 			{
 				'word': 'hi'
@@ -804,7 +804,7 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 		]
 
 	def test_split_words(self):
-		""" Should succeed at splitting words into tokens """
+		""" Should split words into tokens """
 		fa_words = [
 			{
 				'end': 0.5,
