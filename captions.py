@@ -1,7 +1,10 @@
 import yaml
 
+from captions_to_vtt import convert as captions_to_vtt
 from config import *
 from google.cloud import error_reporting
+from text_to_ts_phrases import TextToTimestampPhrases
+from ts_phrases_to_captions import convert as phrases_to_captions
 
 
 def load_story():
@@ -18,7 +21,7 @@ if __name__ == '__main__':
 		text = story['text']
 		fa_words = story['forcedAligner']['words']
 		# Convert text to timestamp-phrases
-		ts_phrases = text_to_phrase.convert(text, fa_words)
+		ts_phrases = TextToTimestampPhrases().convert(text, fa_words)
 		# Convert timestamp-phrases to captions
 		captions = phrases_to_captions(ts_phrases)
 		# Convert captions to vtt-captions
