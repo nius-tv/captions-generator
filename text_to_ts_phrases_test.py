@@ -704,6 +704,60 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
+	@patch('config.CHAR_DICT', {'A': 'Aih', 'B': 'bEE', 'C': 'CeE'})
+	def test_replace_several_chars(self):
+		""" Should replace several characters """
+		fa_words = [
+			{
+				'end': 0.5,
+				'start': 0.0,
+				'word': 'Test'
+			},
+			{
+				'end': 1.0,
+				'start': 0.5,
+				'word': 'bEE'
+			},
+			{
+				'end': 1.5,
+				'start': 1.0,
+				'word': 'CeE'
+			},
+			{
+				'end': 2.0,
+				'start': 1.5,
+				'word': 'news'
+			},
+			{
+				'end': 2.5,
+				'start': 2.0,
+				'word': 'test'
+			},
+			{
+				'end': 3.0,
+				'start': 2.5,
+				'word': 'Aih'
+			},
+			{
+				'end': 3.5,
+				'start': 3.0,
+				'word': 'bEE'
+			},
+			{
+				'end': 4.0,
+				'start': 3.5,
+				'word': 'CeE'
+			}
+		]
+		text = 'Test bEE-CeE news test Aih-bEE-CeE.'
+
+		assert self.text_to_phrases.convert(text, fa_words) == [
+			{
+				'text': 'Test BC news test ABC.',
+				'timestamps': [(0.0, 0.5), (0.5, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 4.0)]
+			}
+		]
+
 	@patch('config.REPLACE_DICT', {'pokemon': 'pokeemonn', 'mo_re': 'more'})
 	def test_replace_several_tokens(self):
 		""" Should replace several tokens """
@@ -1111,5 +1165,39 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			{
 				'text': 'I. O. S. phone.',
 				'timestamps': [(0.0, 0.5), (0.5, 1.0), (1.0, 1.5), (1.5, 2.0)]
+			}
+		]
+
+	@patch('config.CHAR_DICT', {'A': 'Aih', 'B': 'bEE', 'C': 'CeE'})
+	def test_replace_chars(self):
+		""" Should replace characters """
+		fa_words = [
+			{
+				'end': 0.5,
+				'start': 0.0,
+				'word': 'Aih'
+			},
+			{
+				'end': 1.0,
+				'start': 0.5,
+				'word': 'bEE'
+			},
+			{
+				'end': 1.5,
+				'start': 1.0,
+				'word': 'CeE'
+			},
+			{
+				'end': 2.0,
+				'start': 1.5,
+				'word': 'news'
+			}
+		]
+		text = 'Aih-bEE-CeE news.'
+
+		assert self.text_to_phrases.convert(text, fa_words) == [
+			{
+				'text': 'ABC news.',
+				'timestamps': [(0.0, 1.5), (1.5, 2.0)]
 			}
 		]

@@ -194,6 +194,62 @@ class TextToTimestampPhrases(object):
 
 		return phrases
 
+	def _join_chars(self, ts_phrases):
+		while True:
+			old_ts_phrases = copy.deepcopy(ts_phrases)
+
+			for ts_phrase in ts_phrases:
+				tokens = ts_phrase['text'].split(' ')
+				timestamps = ts_phrase['timestamps']
+
+				for i, original_t in enumerate(tokens):
+					parts = original_t.split('-')
+					num_parts = len(parts)
+
+					if num_parts <= 1 or max([len(p.replace('.', '')) for p in parts]) > 1:
+						continue
+
+					token = ''.join([ts['word'] for ts in timestamps[i:i + num_parts]]) # join chars
+
+					ts_phrase['text'] = ts_phrase['text'].replace(original_t, token, 1) # 1: replace first ocurrance
+					if parts[num_parts - 1][-1] == '.':
+						ts_phrase['text'] += '.'
+
+					timestamps.append({
+						'start': timestamps[i]['start'],
+						'end':  timestamps[i + num_parts - 1]['end'],
+						'word': token
+					})
+					del timestamps[i:i + num_parts]
+
+					break
+
+				# Sort by "start"
+				ts_phrase['timestamps'].sort(key=lambda x: float(x['start']), reverse=False)
+
+			if ts_phrases == old_ts_phrases:
+				break
+
+		return ts_phrases
+
+	def _replace_chars(self, ts_phrases):
+		while True:
+			old_ts_phrases = copy.deepcopy(ts_phrases)
+
+			for ts_phrase in ts_phrases:
+				for t_to, t_from in config.CHAR_DICT.items():
+					if t_from in ts_phrase['text']:
+						timestamps = ts_phrase['timestamps']
+						pos, _ = self._find_first_token_pos(timestamps, t_from)
+						timestamps[pos]['word'] = timestamps[pos]['word'].replace(t_from, t_to)
+
+						ts_phrase['text'] = ts_phrase['text'].replace(t_from, t_to, 1) # 1: replace first ocurrance
+
+			if ts_phrases == old_ts_phrases:
+				break
+
+		return ts_phrases
+
 	def _replace_tokens(self, ts_phrases):
 		while True:
 			old_ts_phrases = copy.deepcopy(ts_phrases)
@@ -264,6 +320,8 @@ class TextToTimestampPhrases(object):
 		aligned_fa_indexes = self._align_phrases_with_forced_aligned_words(phrases, fa_words)
 		ts_phrases = self._timestamp_phrases(text, phrases, fa_words, aligned_fa_indexes)
 		ts_phrases = self._replace_tokens(ts_phrases)
+		ts_phrases = self._replace_chars(ts_phrases)
+		ts_phrases = self._join_chars(ts_phrases)
 		ts_phrases = self._format(ts_phrases)
 
 		return ts_phrases
