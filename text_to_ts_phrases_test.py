@@ -704,6 +704,87 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
+	@patch('config.REPLACE_DICT', {'pokemon': 'pokeemonn', 'mo_re': 'more'})
+	def test_replace_several_tokens(self):
+		""" Should replace several tokens """
+		fa_words = [
+			{
+				'end': 0.5,
+				'start': 0.0,
+				'word': 'pokeemonn'
+			},
+			{
+				'end': 1.0,
+				'start': 0.5,
+				'word': 'and'
+			},
+			{
+				'end': 1.5,
+				'start': 1.0,
+				'word': 'more'
+			},
+			{
+				'end': 2.0,
+				'start': 1.5,
+				'word': 'pokeemonn'
+			}
+		]
+		text = 'pokeemonn and more pokeemonn.'
+
+		assert self.text_to_phrases.convert(text, fa_words) == [
+			{
+				'text': 'pokemon and mo_re pokemon.',
+				'timestamps': [(0.0, 0.5), (0.5, 1.0), (1.0, 1.5), (1.5, 2.0)]
+			}
+		]
+
+	@patch('config.REPLACE_DICT', {'SUVs': 'EsS-EiuU-VeEs'})
+	def test_replace_tokens(self):
+		""" Should replace tokens """
+		fa_words = [
+			{
+				'end': 0.5,
+				'start': 0.0,
+				'word': 'I'
+			},
+			{
+				'end': 1.0,
+				'start': 0.5,
+				'word': 'like'
+			},
+			{
+				'end': 1.5,
+				'start': 1.0,
+				'word': 'Tesla\'s'
+			},
+			{
+				'end': 2.0,
+				'start': 1.5,
+				'word': 'EsS'
+			},
+			{
+				'end': 2.5,
+				'start': 2.0,
+				'word': 'EiuU'
+			},
+			{
+				'end': 3.0,
+				'start': 2.5,
+				'word': 'VeEs'
+			}
+		]
+		text = 'I like Tesla\'s EsS-EiuU-VeEs.'
+
+		assert self.text_to_phrases.convert(text, fa_words) == [
+			{
+				'text': 'I like Tesla\'s SUVs.',
+				'timestamps': [
+					(0.0, 0.5), (0.5, 1.0), (1.0, 1.25), (1.25, 1.5),
+					(1.5, 3.0)
+				]
+			}
+		]
+
 	def test_several_no_time_words_end(self):
 		""" Should timestamp several words-with-no-time ending the captions """
 		fa_words = [

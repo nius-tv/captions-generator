@@ -1,4 +1,5 @@
 import config
+import copy
 import spacy
 
 
@@ -142,6 +143,24 @@ class TextToTimestampPhrases(object):
 
 		raise Exception('No condition met')
 
+	def _find_first_token_pos(self, ts_phrase, replace):
+		tokens = replace.split('-')
+		for token in tokens:
+			for i, ts in enumerate(ts_phrase['timestamps']):
+				if token == ts['word']:
+					return i, len(tokens)
+
+	def _format(self, ts_phrases):
+		for ts_phrase in ts_phrases:
+			timestamps = []
+			for ts in ts_phrase['timestamps']:
+				ts = (ts['start'], ts['end'])
+				timestamps.append(ts)
+
+			ts_phrase['timestamps'] = timestamps
+
+		return ts_phrases
+
 	def _get_phrases(self, text):
 		text = text.replace('-', ' ') # split words such as in-law, dry-cleaning
 		text = text.replace('+', ' ') # split words such as Wieden+Kennedy
@@ -172,6 +191,33 @@ class TextToTimestampPhrases(object):
 
 		return phrases
 
+	def _replace_tokens(self, ts_phrases):
+		while True:
+			old_ts_phrases = copy.deepcopy(ts_phrases)
+
+			for ts_phrase in ts_phrases:
+				for key, replace in config.REPLACE_DICT.items():
+					if replace in ts_phrase['text']:
+						pos, num_replace_tokens = self._find_first_token_pos(ts_phrase, replace)
+						ts = ts_phrase['timestamps']
+						ts.append({
+							'start': ts[pos]['start'],
+							'end':  ts[pos + num_replace_tokens - 1]['end'],
+							'word': key
+						})
+						del ts[pos:pos + num_replace_tokens]
+
+						ts_phrase['timestamps'] = ts
+						ts_phrase['text'] = ts_phrase['text'].replace(replace, key, 1) # 1: replace first ocurrance
+
+				# Sort by "start"
+				ts_phrase['timestamps'].sort(key=lambda x: float(x['start']), reverse=False)
+
+			if ts_phrases == old_ts_phrases:
+				break
+
+		return ts_phrases
+
 	def _timestamp_phrases(self, text, phrases, fa_words, aligned_fa_indexes):
 		phrase_ts = []
 		prev_break = None
@@ -192,8 +238,7 @@ class TextToTimestampPhrases(object):
 				if 'end' not in fa_word:
 					fa_word['end'] = self._find_closest_time(fa_words, 'end', a, prev_break, next_break)
 
-				timestamp = fa_word['start'], fa_word['end']
-				words_ts.append(timestamp)
+				words_ts.append(fa_word)
 				prev_break = next_break
 
 			start = phrases[i][0]['idx']
@@ -215,5 +260,7 @@ class TextToTimestampPhrases(object):
 		fa_words = self._check_forced_aligned_words(fa_words)
 		aligned_fa_indexes = self._align_phrases_with_forced_aligned_words(phrases, fa_words)
 		ts_phrases = self._timestamp_phrases(text, phrases, fa_words, aligned_fa_indexes)
+		ts_phrases = self._replace_tokens(ts_phrases)
+		ts_phrases = self._format(ts_phrases)
 
 		return ts_phrases
