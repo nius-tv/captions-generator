@@ -143,10 +143,10 @@ class TextToTimestampPhrases(object):
 
 		raise Exception('No condition met')
 
-	def _find_first_token_pos(self, ts_phrase, replace):
+	def _find_first_token_pos(self, timestamps, replace):
 		tokens = replace.split('-')
 		for token in tokens:
-			for i, ts in enumerate(ts_phrase['timestamps']):
+			for i, ts in enumerate(timestamps):
 				if token == ts['word']:
 					return i, len(tokens)
 
@@ -168,6 +168,9 @@ class TextToTimestampPhrases(object):
 		for k, v in config.PUNCT_TO_DICTIONARY.items():
 			text = text.replace(k, v)
 
+		# In some cases nlp() doesn't split words ending with periods correctly.
+		# The following code helps with this.
+		text = '{} .'.format(text[0:-1])
 		doc = self.nlp(text)
 		phrases = []
 		tokens = []
@@ -198,16 +201,16 @@ class TextToTimestampPhrases(object):
 			for ts_phrase in ts_phrases:
 				for key, replace in config.REPLACE_DICT.items():
 					if replace in ts_phrase['text']:
-						pos, num_replace_tokens = self._find_first_token_pos(ts_phrase, replace)
-						ts = ts_phrase['timestamps']
-						ts.append({
-							'start': ts[pos]['start'],
-							'end':  ts[pos + num_replace_tokens - 1]['end'],
+						timestamps = ts_phrase['timestamps']
+						pos, num_replace_tokens = self._find_first_token_pos(timestamps, replace)
+						timestamps.append({
+							'start': timestamps[pos]['start'],
+							'end':  timestamps[pos + num_replace_tokens - 1]['end'],
 							'word': key
 						})
-						del ts[pos:pos + num_replace_tokens]
+						del timestamps[pos:pos + num_replace_tokens]
 
-						ts_phrase['timestamps'] = ts
+						ts_phrase['timestamps'] = timestamps
 						ts_phrase['text'] = ts_phrase['text'].replace(replace, key, 1) # 1: replace first ocurrance
 
 				# Sort by "start"
