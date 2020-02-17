@@ -114,6 +114,7 @@ REPLACE_DICT = {
 	'Huawei': 'Whahwaee',
 	'Xiaomi': 'She-a-omee',
 	'Hobbi': 'hObBy',
+	'SpaceX': 'Space-Exx',
 }
 SPACY_MODEL_NAME = 'en_core_web_sm'
 STORY_FILE_PATH = '/data/story.yaml'
