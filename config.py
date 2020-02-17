@@ -85,6 +85,8 @@ REPLACE_DICT = {
 	' Live': ' Li-vv',
 	'console': 'connsole',
 	'Console': 'Connsole',
+	# People
+	'Assange': 'Assanhge',
 	# Pokemon
 	'pokemon': 'pokeemonn',
 	'Pokemon': 'Pokeemonn',
@@ -96,7 +98,6 @@ REPLACE_DICT = {
 	'Alipay': 'Ali-pay',
 	'WeChat': 'We-Chat',
 	'Amazon': 'Aama-zon',
-	'NASA': 'Na-Sah',
 	'Reuters': 'Roters',
 	'NVIDIA': 'EN-VIDIA',
 	'Nvidia': 'EN-vidia',
@@ -114,7 +115,15 @@ REPLACE_DICT = {
 	'Huawei': 'Whahwaee',
 	'Xiaomi': 'She-a-omee',
 	'Hobbi': 'hObBy',
+	# Space
 	'SpaceX': 'Space-Exx',
+	'NASA': 'Na-Sah',
+	'Jupiter': 'Jupee-ter',
+	'Venus': 'Veenus',
+	'satellites': 'sahtelaets',
+	'Satellites': 'sahtelaets',
+	'satellite': 'sahtelaet',
+	'Satellite': 'sahtelaet',
 }
 SPACY_MODEL_NAME = 'en_core_web_sm'
 STORY_FILE_PATH = '/data/story.yaml'
