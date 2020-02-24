@@ -85,8 +85,16 @@ REPLACE_DICT = {
 	' Live': ' Li-vv',
 	'console': 'connsole',
 	'Console': 'Connsole',
+	'espionage': 'espio-nash',
+	'online': 'on-line',
+	'spreading': 'sprehding',
 	# People
 	'Assange': 'Assanhge',
+	'Xi ': 'SHe ',
+	' Xi': ' SHe',
+	# Countries
+	'Iraq': 'Eh-rak',
+	'Iran': 'Eh-ran',
 	# Pokemon
 	'pokemon': 'pokeemonn',
 	'Pokemon': 'Pokeemonn',
