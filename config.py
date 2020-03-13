@@ -88,6 +88,9 @@ REPLACE_DICT = {
 	'espionage': 'espio-nash',
 	'online': 'on-line',
 	'spreading': 'sprehding',
+	'decade': 'deh-cade',
+	'dinosaur': 'dyhna-sor',
+	'Dinosaur': 'Dyhna-sor',
 	# People
 	'Assange': 'Assanhge',
 	'Xi ': 'SHe ',
