@@ -232,33 +232,6 @@ class TextToTimestampPhrases(object):
 
 		return ts_phrases
 
-	def _replace_tokens(self, ts_phrases):
-		while True:
-			old_ts_phrases = copy.deepcopy(ts_phrases)
-
-			for ts_phrase in ts_phrases:
-				for key, replace in config.REPLACE_DICT.items():
-					if replace in ts_phrase['text']:
-						timestamps = ts_phrase['timestamps']
-						pos, num_replace_tokens = self._find_first_token_pos(timestamps, replace)
-						timestamps.append({
-							'start': timestamps[pos]['start'],
-							'end':  timestamps[pos + num_replace_tokens - 1]['end'],
-							'word': key
-						})
-						del timestamps[pos:pos + num_replace_tokens]
-
-						ts_phrase['timestamps'] = timestamps
-						ts_phrase['text'] = ts_phrase['text'].replace(replace, key, 1) # 1: replace first ocurrance
-
-				# Sort by "start"
-				ts_phrase['timestamps'].sort(key=lambda x: float(x['start']), reverse=False)
-
-			if ts_phrases == old_ts_phrases:
-				break
-
-		return ts_phrases
-
 	def _timestamp_phrases(self, text, phrases, fa_words, aligned_fa_indexes):
 		phrase_ts = []
 		prev_break = None
@@ -301,8 +274,6 @@ class TextToTimestampPhrases(object):
 		fa_words = self._check_forced_aligned_words(fa_words)
 		aligned_fa_indexes = self._align_phrases_with_forced_aligned_words(phrases, fa_words)
 		ts_phrases = self._timestamp_phrases(text, phrases, fa_words, aligned_fa_indexes)
-		ts_phrases = self._replace_tokens(ts_phrases)
-		ts_phrases = self._replace_chars(ts_phrases)
 		ts_phrases = self._join_chars(ts_phrases)
 		ts_phrases = self._format(ts_phrases)
 
