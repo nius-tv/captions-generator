@@ -8,34 +8,6 @@ AVG_DURATION_PER_WORD = 0.5 # in seconds
 BREAK_TOKENS = ['.', ',', ';', '?', '!'] + list(PUNCT_BACK_DICTIONARY.keys())
 CAPTIONS_FILE_PATH = '/data/captions.vtt'
 CAPTIONS_STYLE = 'align:center line:-9 position:50% size:85%'
-CHAR_DICT = {
-	'A': 'Aih',
-	'B': 'bEE',
-	'C': 'CeE',
-	'D': 'DeE',
-	'E': 'EeE',
-	'F': 'EfF',
-	'G': 'GeE',
-	'H': 'AecH',
-	'I': 'eYe',
-	'J': 'JaY',
-	'K': 'KaY',
-	'L': 'ElL',
-	'M': 'EmM',
-	'N': 'EnN',
-	'O': 'Ooh',
-	'P': 'PeE',
-	'Q': 'KiU',
-	'R': 'ArR',
-	'S': 'EsS',
-	'T': 'TeE',
-	'U': 'EiuU',
-	'V': 'VeE',
-	'W': 'Double-eiuU',
-	'X': 'ExX',
-	'Y': 'WhyY',
-	'Z': 'ZeE',
-}
 END_DURATION_OFFSET = 1.5 # in seconds
 MAX_CAPTION_LETTERS = 35
 MAX_NUM_CAND_SEARCH_ATTEMPTS = 500

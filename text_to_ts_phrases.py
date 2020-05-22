@@ -232,24 +232,6 @@ class TextToTimestampPhrases(object):
 
 		return ts_phrases
 
-	def _replace_chars(self, ts_phrases):
-		while True:
-			old_ts_phrases = copy.deepcopy(ts_phrases)
-
-			for ts_phrase in ts_phrases:
-				for t_to, t_from in config.CHAR_DICT.items():
-					if t_from in ts_phrase['text']:
-						timestamps = ts_phrase['timestamps']
-						pos, _ = self._find_first_token_pos(timestamps, t_from)
-						timestamps[pos]['word'] = timestamps[pos]['word'].replace(t_from, t_to)
-
-						ts_phrase['text'] = ts_phrase['text'].replace(t_from, t_to, 1) # 1: replace first ocurrance
-
-			if ts_phrases == old_ts_phrases:
-				break
-
-		return ts_phrases
-
 	def _replace_tokens(self, ts_phrases):
 		while True:
 			old_ts_phrases = copy.deepcopy(ts_phrases)
