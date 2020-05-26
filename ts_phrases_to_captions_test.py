@@ -28,13 +28,13 @@ class TestTimestampPhrasesToCaptions(unittest.TestCase):
 		]
 		assert convert(ts_phrases) == [
 			{
-				'end': 4.0,
 				'start': 0.0,
+				'end': 4.0,
 				'text': 'Windows 7 will no longer get security patches.'
 			},
 			{
-				'end': 7.5,
 				'start': 4.0,
+				'end': 7.5,
 				'text': 'Microsoft won\'t release any new security patch.'
 			}
 		]
@@ -73,23 +73,23 @@ class TestTimestampPhrasesToCaptions(unittest.TestCase):
 		]
 		assert convert(ts_phrases) == [
 			{
-				'end': 2.0,
 				'start': 0.0,
+				'end': 2.0,
 				'text': 'Subway services have been'
 			},
 			{
-				'end': 4.5,
 				'start': 2.0,
+				'end': 4.5,
 				'text': 'suspended, roads and houses closed.'
 			},
 			{
-				'end': 8.0,
 				'start': 4.5,
+				'end': 8.0,
 				'text': 'Collectively, people are not happy with the'
 			},
 			{
-				'end': 11.5,
 				'start': 8.0,
+				'end': 11.5,
 				'text': 'unintended regulation you have seen so far.'
 			}
 		]
@@ -114,13 +114,13 @@ class TestTimestampPhrasesToCaptions(unittest.TestCase):
 		]
 		assert convert(ts_phrases) == [
 			{
-				'end': 3.0,
 				'start': 0,
+				'end': 3.0,
 				'text': 'Well, this is another super long'
 			},
 			{
-				'end': 5.5,
 				'start': 3.0,
+				'end': 5.5,
 				'text': 'test text with one punctuation.'
 			}
 		]
@@ -144,8 +144,8 @@ class TestTimestampPhrasesToCaptions(unittest.TestCase):
 		]
 		assert convert(ts_phrases) == [
 			{
-				'end': 4.0,
 				'start': 0.0,
+				'end': 4.0,
 				'text': 'Windows 7, will no longer get security patches.'
 			}
 		]
@@ -176,13 +176,13 @@ class TestTimestampPhrasesToCaptions(unittest.TestCase):
 		]
 		assert convert(ts_phrases) == [
 			{
-				'end': 3.5,
 				'start': 0,
+				'end': 3.5,
 				'text': 'Windows 7, and Vista, will no longer'
 			},
 			{
-				'end': 7.0,
 				'start': 3.5,
+				'end': 7.0,
 				'text': 'get security patches in the future.'
 			}
 		]
@@ -219,18 +219,18 @@ class TestTimestampPhrasesToCaptions(unittest.TestCase):
 		]
 		assert convert(ts_phrases) == [
 			{
-				'end': 3.5,
 				'start': 0.0,
+				'end': 3.5,
 				'text': 'I like the following days amongst all'
 			},
 			{
-				'end': 6.0,
 				'start': 3.5,
+				'end': 6.0,
 				'text': 'these day, Mondays, and Tuesdays.'
 			},
 			{
-				'end': 8.0,
 				'start': 6.0,
+				'end': 8.0,
 				'text': 'The rest are Nah.'
 			}
 		]
@@ -266,13 +266,13 @@ class TestTimestampPhrasesToCaptions(unittest.TestCase):
 		]
 		assert convert(ts_phrases) == [
 			{
-				'end': 3.0,
 				'start': 0.0,
+				'end': 3.0,
 				'text': 'Windows 7, Windows Vista, and Windows'
 			},
 			{
-				'end': 6.5,
 				'start': 3.0,
+				'end': 6.5,
 				'text': '10, will no longer get security patches.'
 			}
 		]
@@ -291,13 +291,13 @@ class TestTimestampPhrasesToCaptions(unittest.TestCase):
 		]
 		assert convert(ts_phrases) == [
 			{
-				'end': 3.0,
 				'start': 0.0,
+				'end': 3.0,
 				'text': 'This is a very long text'
 			},
 			{
-				'end': 5.0,
 				'start': 3.0,
+				'end': 5.0,
 				'text': 'with one punctuation symbol.'
 			}
 		]
