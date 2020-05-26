@@ -1,651 +1,174 @@
 import unittest
 
 from text_to_ts_phrases import TextToTimestampPhrases
-from unittest.mock import patch
 
 
 class TestTextToTimestampPhrases(unittest.TestCase):
 
 	text_to_phrases = TextToTimestampPhrases()
 
-	def test_hypens(self):
-		""" Should timestamp words with hyphens """
+	def test_replace_chars(self):
+		text = {
+			'expanded': [['Aih', 'bEE', 'CeE'], 'news.'],
+			'normalized': ['ABC', 'news.']
+		}
 		fa_words = [
 			{
+				'start': 0.0,
 				'end': 0.5,
-				'start': 0,
-				'word': '11'
+				'word': 'Aih'
 			},
 			{
-				'end': 1.0,
 				'start': 0.5,
-				'word': 'inch'
+				'end': 1.0,
+				'word': 'bEE'
 			},
 			{
-				'end': 1.5,
 				'start': 1.0,
-				'word': 'tall'
-			},
-			{
-				'end': 2.0,
-				'start': 1.5,
-				'word': 'car'
-			}
-		]
-		text = '11-inch-tall car.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': '11-inch-tall car.',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0), (1.0, 1.5), (1.5, 2.0)]
-			}
-		]
-
-	@patch('config.MAX_SKIP_TOKENS', 1)
-	def test_max_skips(self):
-		""" Should fail on max skips """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0,
-				'word': 'hi'
-			},
-			{
-				'end': 1.0,
-				'start': 0.5,
-				'word': 'th_re'
-			},
-			{
 				'end': 1.5,
-				'start': 1.0,
-				'word': 'th_s'
+				'word': 'CeE'
 			},
 			{
-				'end': 2.0,
 				'start': 1.5,
-				'word': '_s'
-			},
-			{
-				'end': 2.5,
-				'start': 2.0,
-				'word': '_'
-			},
-			{
-				'end': 3.0,
-				'start': 2.5,
-				'word': 'test'
+				'end': 2.0,
+				'word': 'news'
 			}
 		]
-		text = 'Hi there, this is a test.'
+		assert self.text_to_phrases.convert(text, fa_words) == [
+			{
+				'text': 'ABC news.',
+				'timestamps': [(0.0, 1.5), (1.5, 2.0)]
+			}
+		]
 
-		with self.assertRaises(AssertionError):
-			self.text_to_phrases.convert(text, fa_words)
-
-	def test_no_time_words_end(self):
-		""" Should timestamp words-with-no-time ending the captions """
+		text = {
+			'expanded': ['News', ['Aih', 'bEE', 'CeE.']],
+			'normalized': ['News', 'ABC.']
+		}
 		fa_words = [
 			{
+				'start': 0.0,
 				'end': 0.5,
-				'start': 0,
-				'word': 'hi'
+				'word': 'news'
 			},
 			{
-				'end': 1.0,
 				'start': 0.5,
-				'word': 'there'
+				'end': 1.0,
+				'word': 'Aih'
 			},
 			{
+				'start': 1.0,
 				'end': 1.5,
-				'start': 1.0,
-				'word': 'this'
+				'word': 'bEE'
 			},
 			{
-				'end': 2.0,
 				'start': 1.5,
-				'word': 'is'
-			},
-			{
-				'end': 2.5,
-				'start': 2.0,
-				'word': 'a'
-			},
-			{
-				'word': 'test'
-			}
-		]
-		text = 'Hi there, this is a test.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'Hi there,',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
-			},
-			{
-				'text': 'this is a test.',
-				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
-			}
-		]
-
-	def test_no_time_words_start(self):
-		""" Should timestamp words-with-no-time starting the captions """
-		fa_words = [
-			{
-				'word': 'hi'
-			},
-			{
-				'end': 1.0,
-				'start': 0.5,
-				'word': 'there'
-			},
-			{
-				'end': 1.5,
-				'start': 1.0,
-				'word': 'this'
-			},
-			{
 				'end': 2.0,
-				'start': 1.5,
-				'word': 'is'
-			},
-			{
-				'end': 2.5,
-				'start': 2.0,
-				'word': 'a'
-			},
-			{
-				'end': 3.0,
-				'start': 2.5,
-				'word': 'test'
+				'word': 'CeE'
 			}
 		]
-		text = 'Hi there, this is a test.'
-
 		assert self.text_to_phrases.convert(text, fa_words) == [
 			{
-				'text': 'Hi there,',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
-			},
-			{
-				'text': 'this is a test.',
-				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
+				'text': 'News ABC.',
+				'timestamps': [(0.0, 0.5), (0.5, 2.0)]
 			}
 		]
 
-	def test_phrase_distanced_no_time_words_end(self):
-		""" Should timestamp words-with-no-time with distance between phrases (ending) """
+	def test_split_phrases(self):
+		text = {
+			'expanded': ['Yes', 'I', 'win,', ['nineteen', 'eighty', 'six'], 'was', 'it.'],
+			'normalized': ['Yes', 'I', 'win,', '1986', 'was', 'it.']
+		}
 		fa_words = [
 			{
+				'start': 0.0,
 				'end': 0.5,
-				'start': 0,
-				'word': 'hi'
-			},
-			{
-				'word': 'there'
-			},
-			{
-				'end': 5.5,
-				'start': 5.0,
-				'word': 'this'
-			},
-			{
-				'end': 6.0,
-				'start': 5.5,
-				'word': 'is'
-			},
-			{
-				'end': 6.5,
-				'start': 6.0,
-				'word': 'a'
-			},
-			{
-				'end': 7.0,
-				'start': 6.5,
-				'word': 'test'
-			}
-		]
-		text = 'Hi there, this is a test.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'Hi there,',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
-			},
-			{
-				'text': 'this is a test.',
-				'timestamps': [(5.0, 5.5), (5.5, 6.0), (6.0, 6.5), (6.5, 7.0)]
-			}
-		]
-
-	def test_phrase_distanced_no_time_words_start(self):
-		""" Should timestamp words-with-no-time with distance between phrases (starting) """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0,
-				'word': 'hi'
-			},
-			{
-				'end': 1.0,
-				'start': 0.5,
-				'word': 'there'
-			},
-			{
-				'word': 'this'
-			},
-			{
-				'end': 5.0,
-				'start': 4.5,
-				'word': 'is'
-			},
-			{
-				'end': 5.5,
-				'start': 5.0,
-				'word': 'a'
-			},
-			{
-				'end': 6.0,
-				'start': 5.5,
-				'word': 'test'
-			}
-		]
-		text = 'Hi there, this is a test.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'Hi there,',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
-			},
-			{
-				'text': 'this is a test.',
-				'timestamps': [(4.0, 4.5), (4.5, 5.0), (5.0, 5.5), (5.5, 6.0)]
-			}
-		]
-
-	def test_phrase_no_time_words_end(self):
-		""" Should timestamp words-with-no-time ending a phrase """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0,
-				'word': 'hi'
-			},
-			{
-				'word': 'there'
-			},
-			{
-				'end': 1.5,
-				'start': 1.0,
-				'word': 'this'
-			},
-			{
-				'end': 2.0,
-				'start': 1.5,
-				'word': 'is'
-			},
-			{
-				'end': 2.5,
-				'start': 2.0,
-				'word': 'a'
-			},
-			{
-				'end': 3.0,
-				'start': 2.5,
-				'word': 'test'
-			}
-		]
-		text = 'Hi there, this is a test.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'Hi there,',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
-			},
-			{
-				'text': 'this is a test.',
-				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
-			}
-		]
-
-	def test_phrase_no_time_words_middle(self):
-		""" Should timestamp words-with-no-time in middle of phrase """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0,
-				'word': 'hi'
-			},
-			{
-				'end': 1.0,
-				'start': 0.5,
-				'word': 'there'
-			},
-			{
-				'end': 1.5,
-				'start': 1.0,
-				'word': 'this'
-			},
-			{
-				'word': 'is'
-			},
-			{
-				'end': 2.5,
-				'start': 2.0,
-				'word': 'a'
-			},
-			{
-				'end': 3.0,
-				'start': 2.5,
-				'word': 'test'
-			}
-		]
-		text = 'Hi there, this is a test.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'Hi there,',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
-			},
-			{
-				'text': 'this is a test.',
-				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
-			}
-		]
-
-	def test_phrase_no_time_words_start(self):
-		""" Should timestamp words-with-no-time starting a phrase """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0,
-				'word': 'hi'
-			},
-			{
-				'end': 1.0,
-				'start': 0.5,
-				'word': 'there'
-			},
-			{
-				'word': 'this'
-			},
-			{
-				'end': 2.0,
-				'start': 1.5,
-				'word': 'is'
-			},
-			{
-				'end': 2.5,
-				'start': 2.0,
-				'word': 'a'
-			},
-			{
-				'end': 3.0,
-				'start': 2.5,
-				'word': 'test'
-			}
-		]
-		text = 'Hi there, this is a test.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'Hi there,',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
-			},
-			{
-				'text': 'this is a test.',
-				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
-			}
-		]
-
-	def test_phrase_several_no_time_words_end_start(self):
-		""" Should timestamp several words-with-no-time ending and starting a phrase """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0,
-				'word': 'hi'
-			},
-			{
-				'word': 'there'
-			},
-			{
-				'word': 'this'
-			},
-			{
-				'end': 2.0,
-				'start': 1.5,
-				'word': 'is'
-			},
-			{
-				'end': 2.5,
-				'start': 2.0,
-				'word': 'a'
-			},
-			{
-				'end': 3.0,
-				'start': 2.5,
-				'word': 'test'
-			}
-		]
-		text = 'Hi there, this is a test.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'Hi there,',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
-			},
-			{
-				'text': 'this is a test.',
-				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
-			}
-		]
-
-	def test_phrase_several_no_time_words_middle(self):
-		""" Should timestamp several words-with-no-time at middle of a phrase """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0,
-				'word': 'hi'
-			},
-			{
-				'end': 1.0,
-				'start': 0.5,
-				'word': 'there'
-			},
-			{
-				'end': 1.5,
-				'start': 1.0,
-				'word': 'this'
-			},
-			{
-				'word': 'is'
-			},
-			{
-				'word': 'a'
-			},
-			{
-				'end': 3.0,
-				'start': 2.5,
-				'word': 'test'
-			}
-		]
-		text = 'Hi there, this is a test.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'Hi there,',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
-			},
-			{
-				'text': 'this is a test.',
-				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
-			}
-		]
-
-	def test_phrase_several_no_time_words_middle_end(self):
-		""" Should timestamp several words-with-no-time at middle and end of a phrase """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0,
-				'word': 'hi'
-			},
-			{
-				'end': 1.0,
-				'start': 0.5,
-				'word': 'there'
-			},
-			{
-				'end': 1.5,
-				'start': 1.0,
-				'word': 'this'
-			},
-			{
-				'end': 2.0,
-				'start': 1.5,
-				'word': 'is'
-			},
-			{
-				'word': 'a'
-			},
-			{
-				'word': 'test'
-			},
-			{
-				'end': 3.5,
-				'start': 3.0,
 				'word': 'Yes'
+			},
+			{
+				'start': 0.5,
+				'end': 1.0,
+				'word': 'I'
+			},
+			{
+				'start': 1.0,
+				'end': 1.5,
+				'word': 'win'
+			},
+			{
+				'start': 1.5,
+				'end': 2.0,
+				'word': 'nineteen'
+			},
+			{
+				'start': 2.0,
+				'end': 2.5,
+				'word': 'eighty'
+			},
+			{
+				'start': 2.5,
+				'end': 3.0,
+				'word': 'six'
+			},
+			{
+				'start': 3.0,
+				'end': 3.5,
+				'word': 'was'
+			},
+			{
+				'start': 3.5,
+				'end': 4.0,
+				'word': 'it'
 			}
 		]
-		text = 'Hi there, this is a test. Yes.'
-
 		assert self.text_to_phrases.convert(text, fa_words) == [
 			{
-				'text': 'Hi there,',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
+				'text': 'Yes I win,',
+				'timestamps': [(0.0, 0.5), (0.5, 1.0), (1.0, 1.5)]
 			},
 			{
-				'text': 'this is a test.',
-				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
-			},
-			{
-				'text': 'Yes.',
-				'timestamps': [(3.0, 3.5)]
+				'text': '1986 was it.',
+				'timestamps': [(1.5, 3.0), (3.0, 3.5), (3.5, 4.0)]
 			}
 		]
 
-	def test_phrase_several_no_time_words_start_middle(self):
-		""" Should timestamp several words-with-no-time at start and middle of a phrase """
+	def test_quotes(self):
+		text = {
+			'expanded': ['"Hi', 'there",', 'this', 'is', 'a', 'test.'],
+			'normalized': ['"Hi', 'there",', 'this', 'is', 'a', 'test.']
+		}
 		fa_words = [
 			{
+				'start': 0.0,
 				'end': 0.5,
-				'start': 0,
 				'word': 'hi'
 			},
 			{
-				'end': 1.0,
 				'start': 0.5,
+				'end': 1.0,
 				'word': 'there'
 			},
 			{
+				'start': 1.0,
+				'end': 1.5,
 				'word': 'this'
 			},
 			{
+				'start': 1.5,
+				'end': 2.0,
 				'word': 'is'
 			},
 			{
-				'end': 2.5,
 				'start': 2.0,
+				'end': 2.5,
 				'word': 'a'
 			},
 			{
-				'end': 3.0,
 				'start': 2.5,
+				'end': 3.0,
 				'word': 'test'
 			}
 		]
-		text = 'Hi there, this is a test.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'Hi there,',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
-			},
-			{
-				'text': 'this is a test.',
-				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
-			}
-		]
-
-	def test_plus_sign(self):
-		""" Should timestamp words with "plus signs" """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0,
-				'word': 'Wieden'
-			},
-			{
-				'end': 1.0,
-				'start': 0.5,
-				'word': 'Kennedy'
-			},
-			{
-				'end': 1.5,
-				'start': 1.0,
-				'word': 'tall'
-			},
-			{
-				'end': 2.0,
-				'start': 1.5,
-				'word': 'car'
-			}
-		]
-		text = 'Wieden+Kennedy tall car.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'Wieden+Kennedy tall car.',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0), (1.0, 1.5), (1.5, 2.0)]
-			}
-		]
-
-	def test_replace_comma_quote(self):
-		""" Should replace phrases ending with comma and quote """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0,
-				'word': 'hi'
-			},
-			{
-				'end': 1.0,
-				'start': 0.5,
-				'word': 'there'
-			},
-			{
-				'end': 1.5,
-				'start': 1.0,
-				'word': 'this'
-			},
-			{
-				'end': 2.0,
-				'start': 1.5,
-				'word': 'is'
-			},
-			{
-				'end': 2.5,
-				'start': 2.0,
-				'word': 'a'
-			},
-			{
-				'end': 3.0,
-				'start': 2.5,
-				'word': 'test'
-			}
-		]
-		text = '"Hi there," this is a test.'
-
 		assert self.text_to_phrases.convert(text, fa_words) == [
 			{
 				'text': '"Hi there",',
@@ -657,141 +180,11 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			}
 		]
 
-	def test_replace_period_quote(self):
-		""" Should replace phrases ending with period and quote """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0,
-				'word': 'hi'
-			},
-			{
-				'end': 1.0,
-				'start': 0.5,
-				'word': 'there'
-			},
-			{
-				'end': 1.5,
-				'start': 1.0,
-				'word': 'this'
-			},
-			{
-				'end': 2.0,
-				'start': 1.5,
-				'word': 'is'
-			},
-			{
-				'end': 2.5,
-				'start': 2.0,
-				'word': 'a'
-			},
-			{
-				'end': 3.0,
-				'start': 2.5,
-				'word': 'test'
-			}
-		]
-		text = '"Hi there." This is a test.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': '"Hi there".',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
-			},
-			{
-				'text': 'This is a test.',
-				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
-			}
-		]
-
-	def test_several_no_time_words_end(self):
-		""" Should timestamp several words-with-no-time ending the captions """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0,
-				'word': 'hi'
-			},
-			{
-				'end': 1.0,
-				'start': 0.5,
-				'word': 'there'
-			},
-			{
-				'end': 1.5,
-				'start': 1.0,
-				'word': 'this'
-			},
-			{
-				'end': 2.0,
-				'start': 1.5,
-				'word': 'is'
-			},
-			{
-				'word': 'a'
-			},
-			{
-				'word': 'test'
-			}
-		]
-		text = 'Hi there, this is a test.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'Hi there,',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
-			},
-			{
-				'text': 'this is a test.',
-				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
-			}
-		]
-
-	def test_several_no_time_words_start(self):
-		""" Should timestamp several words-with-no-time starting the captions """
-		fa_words = [
-			{
-				'word': 'hi'
-			},
-			{
-				'word': 'there'
-			},
-			{
-				'end': 1.5,
-				'start': 1.0,
-				'word': 'this'
-			},
-			{
-				'end': 2.0,
-				'start': 1.5,
-				'word': 'is'
-			},
-			{
-				'end': 2.5,
-				'start': 2.0,
-				'word': 'a'
-			},
-			{
-				'end': 3.0,
-				'start': 2.5,
-				'word': 'test'
-			}
-		]
-		text = 'Hi there, this is a test.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'Hi there,',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
-			},
-			{
-				'text': 'this is a test.',
-				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
-			}
-		]
-
 	def test_sequence_of_punctuations(self):
-		""" Should succeed at processing a sequence of punctuations """
+		text = {
+			'expanded': ['I', 'want', 'to', 'thank', 'President', 'John!".'],
+			'normalized': ['I', 'want', 'to', 'thank', 'President', 'John!".']
+		}
 		fa_words = [
 			{
 				'end': 0.5,
@@ -824,8 +217,6 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 				'word': 'John!".'
 			}
 		]
-		text = 'I want to thank President John!".'
-
 		assert self.text_to_phrases.convert(text, fa_words) == [
 			{
 				'text': 'I want to thank President John!".',
@@ -833,202 +224,5 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 					(0.0, 0.5), (0.5, 1.0), (1.0, 1.5),
 					(1.5, 2.0), (2.0, 2.5), (2.5, 3.0)
 				]
-			}
-		]
-
-	def test_split_words(self):
-		""" Should split words into tokens """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0.0,
-				'word': 'He\'s'
-			},
-			{
-				'end': 2.0,
-				'start': 0.5,
-				'word': 'sleepy'
-			}
-		]
-		text = 'He\'s sleepy.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'He\'s sleepy.',
-				'timestamps': [(0.0, 0.25), (0.25, 0.5), (0.5, 2)]
-			}
-		]
-
-	def test_timestap_phrases(self):
-		""" Should timestamp phrases """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0,
-				'word': 'hi'
-			},
-			{
-				'end': 1.0,
-				'start': 0.5,
-				'word': 'there'
-			},
-			{
-				'end': 1.5,
-				'start': 1.0,
-				'word': 'this'
-			},
-			{
-				'end': 2.0,
-				'start': 1.5,
-				'word': 'is'
-			},
-			{
-				'end': 2.5,
-				'start': 2.0,
-				'word': 'a'
-			},
-			{
-				'end': 3.0,
-				'start': 2.5,
-				'word': 'test'
-			}
-		]
-		text = 'Hi there, this is a test.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'Hi there,',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
-			},
-			{
-				'text': 'this is a test.',
-				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
-			}
-		]
-
-	def test_timestap_phrases_with_space_end(self):
-		""" Should timestamp phrases that end with an extra spacing """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0,
-				'word': 'hi'
-			},
-			{
-				'end': 1.0,
-				'start': 0.5,
-				'word': 'there'
-			},
-			{
-				'end': 1.5,
-				'start': 1.0,
-				'word': 'this'
-			},
-			{
-				'end': 2.0,
-				'start': 1.5,
-				'word': 'is'
-			},
-			{
-				'end': 2.5,
-				'start': 2.0,
-				'word': 'a'
-			},
-			{
-				'end': 3.0,
-				'start': 2.5,
-				'word': 'test'
-			}
-		]
-		text = 'Hi there,  this is a test.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'Hi there,',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
-			},
-			{
-				'text': 'this is a test.',
-				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
-			}
-		]
-
-	def test_timestap_phrases_with_space_start(self):
-		""" Should timestamp phrases that start with an extra spacing """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0,
-				'word': 'hi'
-			},
-			{
-				'end': 1.0,
-				'start': 0.5,
-				'word': 'there'
-			},
-			{
-				'end': 1.5,
-				'start': 1.0,
-				'word': 'this'
-			},
-			{
-				'end': 2.0,
-				'start': 1.5,
-				'word': 'is'
-			},
-			{
-				'end': 2.5,
-				'start': 2.0,
-				'word': 'a'
-			},
-			{
-				'end': 3.0,
-				'start': 2.5,
-				'word': 'test'
-			}
-		]
-		text = ' Hi there, this is a test.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'Hi there,',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0)]
-			},
-			{
-				'text': 'this is a test.',
-				'timestamps': [(1.0, 1.5), (1.5, 2.0), (2.0, 2.5), (2.5, 3.0)]
-			}
-		]	
-
-	def test_tokens_with_periods(self):
-		""" Should split tokens with periods """
-		fa_words = [
-			{
-				'end': 0.5,
-				'start': 0,
-				'word': 'I'
-			},
-			{
-				'end': 1.0,
-				'start': 0.5,
-				'word': 'O'
-			},
-			{
-				'end': 1.5,
-				'start': 1.0,
-				'word': 'S'
-			},
-			{
-				'end': 2.0,
-				'start': 1.5,
-				'word': 'phone'
-			}
-		]
-		text = 'I. O. S. phone.'
-
-		assert self.text_to_phrases.convert(text, fa_words) == [
-			{
-				'text': 'I. O. S. phone.',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0), (1.0, 1.5), (1.5, 2.0)]
 			}
 		]
