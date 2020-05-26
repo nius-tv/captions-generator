@@ -10,7 +10,6 @@ RUN pip3 install google-cloud-error-reporting==0.33.0
 RUN pip3 install pytest==3.2.1
 RUN pip3 install pytest-mocha==0.1.0
 RUN pip3 install PyYAML==5.2
-RUN pip3 install spacy==2.2.3
 RUN pip3 install watchdog==0.8.3
 
 # Setup unicode support (required by mocha)
@@ -18,8 +17,6 @@ RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
-
-RUN python3 -m spacy download en_core_web_sm
 
 # Install gcsfuse
 RUN apt-get install -y curl
