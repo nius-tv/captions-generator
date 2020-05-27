@@ -8,6 +8,7 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 	text_to_phrases = TextToTimestampPhrases()
 
 	def test_hypens(self):
+		""" Should timestamp words with hyphens """
 		text = {
 			'expanded':   ['11-inch-tall', 'car.'],
 			'normalized': ['11-inch-tall', 'car.']
@@ -42,6 +43,7 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 		]
 
 	def test_quotes(self):
+		""" Should timestamp phrases with quotes """
 		text = {
 			'expanded': ['"Hi', 'there",', 'this', 'is', 'a', 'test.'],
 			'normalized': ['"Hi', 'there",', 'this', 'is', 'a', 'test.']
@@ -90,6 +92,7 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 		]
 
 	def test_remove_new_lines(self):
+		""" Should remove new lines """
 		text = {
 			'expanded': ['\nI', 'want', 'to', 'thank', 'President', 'John!".'],
 			'normalized': ['\nI', 'want', 'to', 'thank', 'President', 'John!".']
@@ -137,6 +140,7 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 		]
 
 	def test_replace_chars(self):
+		""" Should replace characters """
 		text = {
 			'expanded': [['Aih', 'bEE', 'CeE'], 'news.'],
 			'normalized': ['ABC', 'news.']
@@ -204,6 +208,7 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 		]
 
 	def test_sequence_of_punctuations(self):
+		""" Should maintain sequence of punctuations """
 		text = {
 			'expanded': ['I', 'want', 'to', 'thank', 'President', 'John!".'],
 			'normalized': ['I', 'want', 'to', 'thank', 'President', 'John!".']
@@ -251,6 +256,7 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 		]
 
 	def test_split_phrases(self):
+		""" Should split phrases """
 		text = {
 			'expanded': ['Yes', 'I', 'win,', ['nineteen', 'eighty', 'six'], 'was', 'it.'],
 			'normalized': ['Yes', 'I', 'win,', '1986', 'was', 'it.']
