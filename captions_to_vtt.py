@@ -3,23 +3,20 @@ import datetime
 
 
 def build_vtt_caption(caption_a, caption_b=None):
-	lines = [
-		caption_a['text']
-	]
-
 	if caption_b is None:
-		tmp_caption = caption_a
+		end = caption_a['end']
 	else:
-		tmp_caption = caption_b
+		end = caption_b['end']
 		lines.append(caption_b['text'])
 
 	header = '{} --> {} {}'.format(caption_a['start'],
-								   tmp_caption['end'],
+								   end,
 								   config.CAPTIONS_STYLE)
-	lines.insert(0, header)
-	lines.append('')
-
-	return lines
+	return [
+		header,
+		caption_a['text'],
+		''
+	]
 
 
 def convert(captions, duration):
