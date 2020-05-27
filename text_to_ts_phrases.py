@@ -1,5 +1,6 @@
 from config import *
 
+
 class TextToTimestampPhrases(object):
 
 	def _get_index(self, expanded, i):
