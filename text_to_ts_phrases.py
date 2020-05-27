@@ -11,9 +11,10 @@ class TextToTimestampPhrases(object):
 						return True, a
 					index += 1
 			else:
-				if index == i:
-					return False, a
-				index += 1
+				for sub_part in part.split('-'):
+					if index == i:
+						return False, a
+					index += 1
 
 	def convert(self, text, fa_words):
 		expanded = text['expanded']

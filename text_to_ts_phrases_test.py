@@ -7,6 +7,40 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 
 	text_to_phrases = TextToTimestampPhrases()
 
+	def test_hypens(self):
+		text = {
+			'expanded':   ['11-inch-tall', 'car.'],
+			'normalized': ['11-inch-tall', 'car.']
+		}
+		fa_words = [
+			{
+				'start': 0.0,
+				'end': 0.5,
+				'word': '11'
+			},
+			{
+				'start': 0.5,
+				'end': 1.0,
+				'word': 'inch'
+			},
+			{
+				'start': 1.0,
+				'end': 1.5,
+				'word': 'tall'
+			},
+			{
+				'start': 1.5,
+				'end': 2.0,
+				'word': 'car'
+			}
+		]
+		assert self.text_to_phrases.convert(text, fa_words) == [
+			{
+				'text': '11-inch-tall car.',
+				'timestamps': [(0.0, 0.5), (0.5, 1.0), (1.0, 1.5), (1.5, 2.0)]
+			}
+		]
+
 	def test_replace_chars(self):
 		text = {
 			'expanded': [['Aih', 'bEE', 'CeE'], 'news.'],
