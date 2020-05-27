@@ -56,8 +56,10 @@ class TextToTimestampPhrases(object):
 
 		if was_list or len(timestamps) > 0:
 			timestamps.append((start, end))
+			text = normalized[prev_i:norm_i+1]
+			text = ' '.join(text).strip()
 			phrase = {
-				'text': ' '.join(normalized[prev_i:norm_i+1]),
+				'text': text,
 				'timestamps': timestamps
 			}
 			phrases.append(phrase)
