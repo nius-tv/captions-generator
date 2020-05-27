@@ -61,10 +61,6 @@ def format_captions(captions, duration):
 		if end > duration:
 			end = duration
 		caption['end'] = format_time(end)
-		# The following condition allow us to use the "start" of current
-		# caption as "end" of prev one, preventing his prevents "time gaps".
-		if i > 0:
-			formatted[i - 1]['end'] = caption['start']
 
 	return formatted
 
