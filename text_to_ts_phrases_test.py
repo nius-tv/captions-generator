@@ -260,3 +260,50 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 				]
 			}
 		]
+
+	def test_remove_new_lines(self):
+		text = {
+			'expanded': ['\nI', 'want', 'to', 'thank', 'President', 'John!".'],
+			'normalized': ['\nI', 'want', 'to', 'thank', 'President', 'John!".']
+		}
+		fa_words = [
+			{
+				'start': 0.0,
+				'end': 0.5,
+				'word': 'I'
+			},
+			{
+				'start': 0.5,
+				'end': 1.0,
+				'word': 'want'
+			},
+			{
+				'start': 1.0,
+				'end': 1.5,
+				'word': 'to'
+			},
+			{
+				'start': 1.5,
+				'end': 2.0,
+				'word': 'thank'
+			},
+			{
+				'start': 2.0,
+				'end': 2.5,
+				'word': 'President'
+			},
+			{
+				'start': 2.5,
+				'end': 3.0,
+				'word': 'John!".'
+			}
+		]
+		assert self.text_to_phrases.convert(text, fa_words) == [
+			{
+				'text': 'I want to thank President John!".',
+				'timestamps': [
+					(0.0, 0.5), (0.5, 1.0), (1.0, 1.5),
+					(1.5, 2.0), (2.0, 2.5), (2.5, 3.0)
+				]
+			}
+		]

@@ -44,8 +44,10 @@ class TextToTimestampPhrases(object):
 			timestamps.append((start, end))
 
 			if normalized[norm_i][-1] in BREAK_TOKENS:
+				text = normalized[prev_i:norm_i+1]
+				text = ' '.join(text).strip()
 				phrase = {
-					'text': ' '.join(normalized[prev_i:norm_i+1]),
+					'text': text,
 					'timestamps': timestamps
 				}
 				phrases.append(phrase)
