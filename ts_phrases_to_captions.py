@@ -38,7 +38,6 @@ def justify_tokens(tokens):
 	num_cand_attempts = 0
 	num_tokens = len(tokens)
 	offsets = {}
-	print('tokens:', tokens)
 
 	while not completed and num_cand_attempts < config.MAX_NUM_CAND_SEARCH_ATTEMPTS:
 		num_cand_attempts += 1
@@ -102,7 +101,6 @@ def sentence_to_captions(ts_phrases):
 			'end': end[1],
 			'text': ' '.join(phrase_tokens)
 		}
-		print('-', caption['text'])
 		captions.append(caption)
 
 	return captions
