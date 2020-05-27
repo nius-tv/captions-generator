@@ -18,9 +18,9 @@ if __name__ == '__main__':
 	try:
 		# Load story
 		story = load_story()
-		text = ' '.join(story['text']['normalized'])
-		fa_words = story['forcedAligner']['words']
 		# Convert text to timestamp-phrases
+		text = story['text']
+		fa_words = story['forcedAligner']['words']
 		ts_phrases = TextToTimestampPhrases().convert(text, fa_words)
 		# Convert timestamp-phrases to captions
 		captions = phrases_to_captions(ts_phrases)
