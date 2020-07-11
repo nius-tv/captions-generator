@@ -38,7 +38,7 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 		assert self.text_to_phrases.convert(text, fa_words) == [
 			{
 				'text': '11-inch-tall car.',
-				'timestamps': [(0.0, 0.5), (0.5, 1.0), (1.0, 1.5), (1.5, 2.0)]
+				'timestamps': [(0.0, 1.5), (1.5, 2.0)]
 			}
 		]
 
@@ -311,5 +311,35 @@ class TestTextToTimestampPhrases(unittest.TestCase):
 			{
 				'text': '1986 was it.',
 				'timestamps': [(1.5, 3.0), (3.0, 3.5), (3.5, 4.0)]
+			}
+		]
+
+	def test_split_years(self):
+		""" Should split years """
+		text = {
+			'expanded': [['twenty', 'twenty-four']],
+			'normalized': ['2024']
+		}
+		fa_words = [
+			{
+				'start': 0.0,
+				'end': 0.5,
+				'word': 'twenty'
+			},
+			{
+				'start': 0.5,
+				'end': 1.0,
+				'word': 'twenty'
+			},
+			{
+				'start': 1.0,
+				'end': 1.5,
+				'word': 'four'
+			}
+		]
+		assert self.text_to_phrases.convert(text, fa_words) == [
+			{
+				'text': '2024',
+				'timestamps': [(0.0, 1.5)]
 			}
 		]

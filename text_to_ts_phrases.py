@@ -5,16 +5,16 @@ class TextToTimestampPhrases(object):
 
 	def _get_index(self, expanded, i):
 		index = 0
-		for a, part in enumerate(expanded):
-			if isinstance(part, list):
-				for b in range(len(part)):
+		for a, parts in enumerate(expanded):
+			if not isinstance(parts, list):
+				parts = [parts]
+
+			for part in parts:
+				pieces = part.split('-')
+				for _ in pieces:
 					if index == i:
-						return True, a
-					index += 1
-			else:
-				for sub_part in part.split('-'):
-					if index == i:
-						return False, a
+						is_list = len(parts) > 1 or len(pieces) > 1
+						return is_list, a
 					index += 1
 
 	def convert(self, text, fa_words):
