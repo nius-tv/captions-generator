@@ -94,7 +94,12 @@ def sentence_to_captions(ts_phrases):
 	for phrase_tokens in justified_phrases:
 		ini = timestamps[count]
 		count += len(phrase_tokens)
-		end = timestamps[count - 1]
+
+		# For context on this condition, see test_split_multiple_words()
+		if len(timestamps) > count:
+			end = timestamps[count-1]
+		else:
+			end = timestamps[-1]
 
 		caption = {
 			'start': ini[0],

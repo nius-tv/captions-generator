@@ -301,3 +301,48 @@ class TestTimestampPhrasesToCaptions(unittest.TestCase):
 				'text': 'with one punctuation symbol.'
 			}
 		]
+
+	def test_split_multiple_words(self):
+		""" Should split phrase containing words-with-dashes into multiple captions """
+		ts_phrases = [
+			{
+				'text': 'The feud between Apple and big-name iOS developers like Epic Games continues to rage in the courts,',
+				'timestamps': [
+					(0.0, 0.5), (0.5, 1.0), (1.0, 1.5), (1.5, 2.0),
+					(2.0, 2.5), (2.5, 3.0), (3.0, 3.5), (3.5, 4.0),
+					(4.0, 4.5), (4.5, 5.0), (5.0, 5.5), (5.5, 6.0),
+					(6.0, 6.5), (6.5, 7.0), (7.0, 7.5), (7.5, 8.0)
+				]
+			},
+			{
+				'text': 'but the iPhone maker has extended an olive branch to smaller devs.',
+				'timestamps': [
+					(8.0,  8.5),  (8.5,  9.0),  (9.0,  9.5),  (9.5, 10.0),
+					(10.0, 10.5), (10.5, 11.0), (11.0, 11.5), (11.5, 12.0),
+					(12.0, 12.5), (12.5, 13.0), (13.0, 13.5), (13.5, 14.0),
+				]
+			}
+		]
+
+		assert convert(ts_phrases) == [
+			{
+				'start': 0.0,
+				'end': 3.0,
+				'text': 'The feud between Apple and big-name'
+			},
+			{
+				'start': 3.0,
+				'end': 6.5,
+				'text': 'iOS developers like Epic Games continues to'
+			},
+			{
+				'start': 6.5,
+				'end': 10.5,
+				'text': 'rage in the courts, but the iPhone maker'
+			},
+			{
+				'start': 10.5,
+				'end': 14.0,
+				'text': 'has extended an olive branch to smaller devs.'
+			}
+		]
